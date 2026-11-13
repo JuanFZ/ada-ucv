@@ -5,6 +5,7 @@ from app.providers.base import LLMProvider, ProviderError, ProviderRateLimitErro
 from app.providers.gemini_adapter import GeminiAdapter
 from app.providers.groq_adapter import GroqAdapter
 from app.providers.mistral_adapter import MistralAdapter
+from app.providers.openrouter_adapter import OpenRouterAdapter
 from app.providers.sambanova_adapter import SambaNovaAdapter
 
 
@@ -13,14 +14,19 @@ class ProviderRouter:
 
     def __init__(self) -> None:
         self._providers: dict[str, LLMProvider] = {
-            "sambanova": SambaNovaAdapter(
-                api_key=settings.sambanova_api_key,
-                model=settings.sambanova_model,
-                timeout=settings.ada_timeout_seconds,
-            ),
             "gemini": GeminiAdapter(
                 api_key=settings.gemini_api_key,
                 model=settings.gemini_model,
+                timeout=settings.ada_timeout_seconds,
+            ),
+            "openrouter": OpenRouterAdapter(
+                api_key=settings.openrouter_api_key,
+                model=settings.openrouter_model,
+                timeout=settings.ada_timeout_seconds,
+            ),
+            "sambanova": SambaNovaAdapter(
+                api_key=settings.sambanova_api_key,
+                model=settings.sambanova_model,
                 timeout=settings.ada_timeout_seconds,
             ),
             "mistral": MistralAdapter(

@@ -37,7 +37,7 @@ class QuestionGenerationRequest(BaseModel):
     count: int = Field(default=3, ge=1, le=10)
     difficulty: Literal["basic", "intermediate", "advanced"] = "intermediate"
     language: str = Field(default="es", max_length=10)
-    provider: Literal["auto", "gemini", "sambanova", "mistral", "groq"] = "auto"
+    provider: Literal["auto", "gemini", "openrouter", "sambanova", "mistral", "groq"] = "auto"
 
 
 class QuestionGenerationResponse(BaseModel):

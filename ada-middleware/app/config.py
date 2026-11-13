@@ -7,17 +7,20 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     ada_service_token: str = "dev-ada-token"
-    ada_primary_provider: str = "mistral"
-    ada_fallback_provider: str = "gemini"
-
-    mistral_api_key: str = ""
-    mistral_model: str = "mistral-small-latest"
+    ada_primary_provider: str = "gemini"
+    ada_fallback_provider: str = "openrouter"
 
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.5-flash-lite"
 
+    openrouter_api_key: str = ""
+    openrouter_model: str = "openrouter/free"
+
     sambanova_api_key: str = ""
     sambanova_model: str = "Meta-Llama-3.3-70B-Instruct"
+
+    mistral_api_key: str = ""
+    mistral_model: str = "mistral-small-latest"
 
     groq_api_key: str = ""
     groq_model: str = "llama-3.3-70b-versatile"
