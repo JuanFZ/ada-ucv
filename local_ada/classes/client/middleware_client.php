@@ -37,7 +37,7 @@ class middleware_client {
             throw new \moodle_exception('error_middleware_unconfigured', 'local_ada');
         }
 
-        $curl = new \curl();
+        $curl = new \curl(['ignoresecurity' => true]);
         $curl->setHeader([
             'Content-Type: application/json',
             'Accept: application/json',
@@ -58,6 +58,8 @@ class middleware_client {
             $decoded = json_decode((string)$raw, true);
             if (is_array($decoded) && !empty($decoded['detail'])) {
                 $detail = ' ' . $decoded['detail'];
+            } else if ($httpcode === 0 && !empty($curl->error)) {
+                $detail = ' ' . $curl->error;
             }
             throw new \moodle_exception('error_middleware_http', 'local_ada', '', $httpcode . $detail);
         }
