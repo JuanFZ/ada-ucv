@@ -1,0 +1,7 @@
+.gemini/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+benchmark_outputs/

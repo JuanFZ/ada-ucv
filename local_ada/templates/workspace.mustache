@@ -1,0 +1,71 @@
+{{!
+    @template local_ada/workspace
+
+    Interfaz principal del Asistente ADA dentro de un curso.
+}}
+<div id="local-ada-workspace" class="card shadow-sm" data-courseid="{{courseid}}">
+    <div class="card-body">
+        <h2 class="h4 mb-1">{{#str}} workspace_title, local_ada {{/str}}</h2>
+        <p class="text-muted mb-4">{{#str}} workspace_subtitle, local_ada {{/str}}</p>
+
+        <form id="ada-question-form" class="mb-4">
+            <div class="mb-3">
+                <label for="ada-topic" class="form-label fw-bold">{{#str}} field_topic, local_ada {{/str}}</label>
+                <textarea id="ada-topic" class="form-control" rows="3" required
+                    placeholder="{{#str}} field_topic_placeholder, local_ada {{/str}}"></textarea>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <label for="ada-count" class="form-label fw-bold">{{#str}} field_count, local_ada {{/str}}</label>
+                    <select id="ada-count" class="form-select">
+                        <option value="1">1</option>
+                        <option value="3" selected>3</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="ada-difficulty" class="form-label fw-bold">{{#str}} field_difficulty, local_ada {{/str}}</label>
+                    <select id="ada-difficulty" class="form-select">
+                        <option value="basic">{{#str}} difficulty_basic, local_ada {{/str}}</option>
+                        <option value="intermediate" selected>{{#str}} difficulty_intermediate, local_ada {{/str}}</option>
+                        <option value="advanced">{{#str}} difficulty_advanced, local_ada {{/str}}</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="ada-provider" class="form-label fw-bold">{{#str}} field_provider, local_ada {{/str}}</label>
+                    <select id="ada-provider" class="form-select">
+                        <option value="auto" selected>{{#str}} provider_auto, local_ada {{/str}}</option>
+                        <option value="groq">Groq (Llama 3.3 70B)</option>
+                        <option value="gemini">Google Gemini (Flash)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="ada-generate-btn" type="submit" class="btn btn-primary">
+                {{#str}} btn_generate, local_ada {{/str}}
+            </button>
+            <span id="ada-status" class="ms-3 text-muted d-none">{{#str}} generating, local_ada {{/str}}</span>
+        </form>
+
+        <div id="ada-error" class="alert alert-danger d-none" role="alert"></div>
+
+        <div id="ada-result" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h3 class="h5 mb-0">{{#str}} preview_title, local_ada {{/str}}</h3>
+                <div>
+                    <button id="ada-download-btn" type="button" class="btn btn-success btn-sm">
+                        {{#str}} btn_download_xml, local_ada {{/str}}
+                    </button>
+                    <a href="{{questionbankurl}}" class="btn btn-outline-secondary btn-sm ms-2" target="_blank" rel="noopener">
+                        Banco de preguntas
+                    </a>
+                </div>
+            </div>
+            <p id="ada-meta" class="small text-muted mb-3"></p>
+            <div id="ada-preview-list" class="list-group"></div>
+        </div>
+    </div>
+</div>
+
