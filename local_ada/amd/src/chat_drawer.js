@@ -1,6 +1,8 @@
 define(['core/ajax'], function(Ajax) {
     'use strict';
 
+    var MAX_HISTORY = 20;
+
     function escapeHtml(str) {
         var div = document.createElement('div');
         div.appendChild(document.createTextNode(str || ''));
@@ -19,10 +21,28 @@ define(['core/ajax'], function(Ajax) {
         URL.revokeObjectURL(url);
     }
 
+    function loadHistory(key) {
+        try {
+            var raw = sessionStorage.getItem(key);
+            return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveHistory(key, items) {
+        try {
+            sessionStorage.setItem(key, JSON.stringify(items.slice(-MAX_HISTORY)));
+        } catch (e) {
+            // Ignore storage quota errors.
+        }
+    }
+
     return {
         init: function(courseid) {
             var toggleBtn = document.getElementById('ada-chat-toggle');
             var closeBtn = document.getElementById('ada-chat-close');
+            var clearBtn = document.getElementById('ada-chat-clear');
             var drawer = document.getElementById('ada-chat-drawer');
             var messages = document.getElementById('ada-chat-messages');
             var form = document.getElementById('ada-chat-form');
@@ -32,6 +52,10 @@ define(['core/ajax'], function(Ajax) {
             if (!toggleBtn || !drawer || !form) {
                 return;
             }
+
+            var historyKey = 'ada_chat_history_' + courseid;
+            var history = loadHistory(historyKey);
+            var welcomeHtml = messages.innerHTML;
 
             var setOpen = function(open) {
                 drawer.classList.toggle('ada-open', open);
@@ -58,13 +82,6 @@ define(['core/ajax'], function(Ajax) {
                 setOpen(false);
             });
 
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    form.requestSubmit();
-                }
-            });
-
             var appendBubble = function(html, isUser) {
                 var div = document.createElement('div');
                 div.className = 'ada-msg ' + (isUser ? 'ada-msg-user' : 'ada-msg-bot');
@@ -73,6 +90,53 @@ define(['core/ajax'], function(Ajax) {
                 messages.scrollTop = messages.scrollHeight;
                 return div;
             };
+
+            var renderResultIntoBubble = function(bubble, entry) {
+                var questions = entry.questions || [];
+                var listHtml = questions.map(function(q, idx) {
+                    return '<div class="mb-1"><strong>' + (idx + 1) + '.</strong> ' + escapeHtml(q.name) + '</div>';
+                }).join('');
+
+                bubble.innerHTML =
+                    '<div class="mb-2">' + listHtml + '</div>' +
+                    '<div class="small text-muted mb-2">' +
+                        escapeHtml(entry.providerused) + ' · ' + entry.latencyms + ' ms' +
+                    '</div>' +
+                    '<button type="button" class="btn btn-success btn-sm ada-dl-btn">' +
+                        escapeHtml(entry.label) +
+                    '</button>';
+
+                var dlBtn = bubble.querySelector('.ada-dl-btn');
+                dlBtn.addEventListener('click', function() {
+                    downloadFile(entry.exportedcontent || '', entry.filename || 'ada_preguntas.xml', entry.mime);
+                });
+            };
+
+            history.forEach(function(item) {
+                if (item.role === 'user') {
+                    appendBubble(escapeHtml(item.text), true);
+                } else if (item.role === 'error') {
+                    appendBubble('<span class="text-danger">' + escapeHtml(item.text) + '</span>', false);
+                } else if (item.role === 'bot') {
+                    var b = appendBubble('', false);
+                    renderResultIntoBubble(b, item);
+                }
+            });
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    history = [];
+                    saveHistory(historyKey, history);
+                    messages.innerHTML = welcomeHtml;
+                });
+            }
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    form.requestSubmit();
+                }
+            });
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -87,6 +151,9 @@ define(['core/ajax'], function(Ajax) {
                 var provider = document.getElementById('ada-chat-provider').value;
 
                 appendBubble(escapeHtml(topic), true);
+                history.push({role: 'user', text: topic});
+                saveHistory(historyKey, history);
+
                 input.value = '';
                 sendBtn.disabled = true;
 
@@ -104,27 +171,27 @@ define(['core/ajax'], function(Ajax) {
                     }
                 }])[0]).then(function(res) {
                     var questions = JSON.parse(res.questionsjson || '[]');
-                    var listHtml = questions.map(function(q, idx) {
-                        return '<div class="mb-1"><strong>' + (idx + 1) + '.</strong> ' + escapeHtml(q.name) + '</div>';
-                    }).join('');
-
                     var mime = exportFormat === 'gift' ? 'text/plain;charset=utf-8' : 'application/xml;charset=utf-8';
                     var label = exportFormat === 'gift' ? 'Descargar GIFT (.txt)' : 'Descargar Moodle XML';
 
-                    loadingBubble.innerHTML =
-                        '<div class="mb-2">' + listHtml + '</div>' +
-                        '<div class="small text-muted mb-2">' +
-                            escapeHtml(res.providerused) + ' · ' + res.latencyms + ' ms' +
-                        '</div>' +
-                        '<button type="button" class="btn btn-success btn-sm ada-dl-btn">' + label + '</button>';
-
-                    var dlBtn = loadingBubble.querySelector('.ada-dl-btn');
-                    dlBtn.addEventListener('click', function() {
-                        downloadFile(res.exportedcontent || '', res.filename || 'ada_preguntas.xml', mime);
-                    });
+                    var entry = {
+                        role: 'bot',
+                        questions: questions,
+                        providerused: res.providerused,
+                        latencyms: res.latencyms,
+                        exportedcontent: res.exportedcontent || '',
+                        filename: res.filename || 'ada_preguntas.xml',
+                        mime: mime,
+                        label: label
+                    };
+                    renderResultIntoBubble(loadingBubble, entry);
+                    history.push(entry);
+                    saveHistory(historyKey, history);
                 }).catch(function(err) {
-                    loadingBubble.innerHTML =
-                        '<span class="text-danger">' + escapeHtml(err.message || 'Error al generar preguntas.') + '</span>';
+                    var msg = (err && err.message) ? err.message : 'Error al generar preguntas.';
+                    loadingBubble.innerHTML = '<span class="text-danger">' + escapeHtml(msg) + '</span>';
+                    history.push({role: 'error', text: msg});
+                    saveHistory(historyKey, history);
                 }).finally(function() {
                     sendBtn.disabled = false;
                 });
@@ -132,4 +199,3 @@ define(['core/ajax'], function(Ajax) {
         }
     };
 });
-
