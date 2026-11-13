@@ -39,7 +39,8 @@ class before_footer_html_generation {
             return;
         }
 
-        if (!has_capability('local/ada:use', $coursecontext)) {
+        $courseid = (int)$coursecontext->instanceid;
+        if (!\local_ada\access_helper::can_use_in_course($courseid)) {
             return;
         }
 
@@ -47,7 +48,6 @@ class before_footer_html_generation {
             return;
         }
 
-        $courseid = (int)$coursecontext->instanceid;
         $PAGE->requires->js_call_amd('local_ada/chat_drawer', 'init', [$courseid]);
 
         $html = $OUTPUT->render_from_template('local_ada/chat_drawer', [

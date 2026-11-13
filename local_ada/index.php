@@ -20,8 +20,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $course = get_course($courseid);
 require_login($course);
 
-$context = context_course::instance($course->id);
-require_capability('local/ada:use', $context);
+$context = \local_ada\access_helper::require_access_in_course((int)$course->id);
 
 $PAGE->set_url(new moodle_url('/local/ada/index.php', ['courseid' => $course->id]));
 $PAGE->set_context($context);

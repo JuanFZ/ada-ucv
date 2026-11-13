@@ -42,5 +42,13 @@ if ($hassiteconfig) {
         '30',
         PARAM_INT
     ));
+
+    $settings->add(new admin_setting_configtext(
+        'local_ada/allowedcategories',
+        get_string('settings_allowedcategories', 'local_ada'),
+        get_string('settings_allowedcategories_desc', 'local_ada'),
+        '',
+        PARAM_SEQUENCE
+    ));
 }
 

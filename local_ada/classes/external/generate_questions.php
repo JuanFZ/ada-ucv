@@ -70,9 +70,8 @@ class generate_questions extends external_api {
             'exportformat' => $exportformat,
         ]);
 
-        $context = \context_course::instance($params['courseid']);
+        $context = \local_ada\access_helper::require_access_in_course((int)$params['courseid']);
         self::validate_context($context);
-        require_capability('local/ada:use', $context);
 
         $course = $DB->get_record('course', ['id' => $params['courseid']], 'id, shortname', MUST_EXIST);
         $moodleversion = str_starts_with((string)$CFG->release, '5.') ? '5.0' : '4.5';

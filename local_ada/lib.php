@@ -24,7 +24,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param context_course $context
  */
 function local_ada_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context): void {
-    if (!has_capability('local/ada:use', $context)) {
+    if (!\local_ada\access_helper::can_use_in_course((int)$course->id)) {
         return;
     }
 
