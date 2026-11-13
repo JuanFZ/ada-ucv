@@ -4,6 +4,7 @@ from app.config import settings
 from app.providers.base import LLMProvider, ProviderError, ProviderRateLimitError, ProviderResult
 from app.providers.gemini_adapter import GeminiAdapter
 from app.providers.groq_adapter import GroqAdapter
+from app.providers.mistral_adapter import MistralAdapter
 
 
 class ProviderRouter:
@@ -11,14 +12,19 @@ class ProviderRouter:
 
     def __init__(self) -> None:
         self._providers: dict[str, LLMProvider] = {
-            "groq": GroqAdapter(
-                api_key=settings.groq_api_key,
-                model=settings.groq_model,
+            "mistral": MistralAdapter(
+                api_key=settings.mistral_api_key,
+                model=settings.mistral_model,
                 timeout=settings.ada_timeout_seconds,
             ),
             "gemini": GeminiAdapter(
                 api_key=settings.gemini_api_key,
                 model=settings.gemini_model,
+                timeout=settings.ada_timeout_seconds,
+            ),
+            "groq": GroqAdapter(
+                api_key=settings.groq_api_key,
+                model=settings.groq_model,
                 timeout=settings.ada_timeout_seconds,
             ),
         }
