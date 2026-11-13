@@ -43,4 +43,8 @@ $string['generating'] = 'Generating and validating questions...';
 $string['preview_title'] = 'Preview before importing';
 $string['error_middleware_unconfigured'] = 'ADA Middleware URL or token is not configured in site administration.';
 $string['error_middleware_http'] = 'Error communicating with ADA Middleware (HTTP {$a}).';
+$string['error_middleware_auth'] = 'The assistant is not authorized. Please contact the Campus administrator.';
+$string['error_middleware_validation'] = 'Could not generate a valid set of questions for that topic. Please try being more specific.';
+$string['error_middleware_unavailable'] = 'The assistant is temporarily unavailable. Please try again in a few moments.';
+$string['error_middleware_friendly'] = '{$a}';
 

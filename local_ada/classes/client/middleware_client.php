@@ -54,19 +54,23 @@ class middleware_client {
         $httpcode = (int)($info['http_code'] ?? 0);
 
         if ($httpcode < 200 || $httpcode >= 300) {
-            $detail = '';
-            $decoded = json_decode((string)$raw, true);
-            if (is_array($decoded) && !empty($decoded['detail'])) {
-                $detail = ' ' . $decoded['detail'];
-            } else if ($httpcode === 0 && !empty($curl->error)) {
-                $detail = ' ' . $curl->error;
+            debugging('ADA Middleware error HTTP ' . $httpcode . ': ' . ($curl->error ?: substr((string)$raw, 0, 300)), DEBUG_DEVELOPER);
+            if ($httpcode === 401 || $httpcode === 403) {
+                throw new \moodle_exception('error_middleware_auth', 'local_ada');
             }
-            throw new \moodle_exception('error_middleware_http', 'local_ada', '', $httpcode . $detail);
+            if ($httpcode === 422) {
+                $decoded = json_decode((string)$raw, true);
+                $msg = (is_array($decoded) && !empty($decoded['detail']))
+                    ? (string)$decoded['detail']
+                    : get_string('error_middleware_validation', 'local_ada');
+                throw new \moodle_exception('error_middleware_friendly', 'local_ada', '', $msg);
+            }
+            throw new \moodle_exception('error_middleware_unavailable', 'local_ada');
         }
 
         $data = json_decode((string)$raw, true);
         if (!is_array($data)) {
-            throw new \moodle_exception('error_middleware_http', 'local_ada', '', 'JSON inválido');
+            throw new \moodle_exception('error_middleware_unavailable', 'local_ada');
         }
 
         return $data;

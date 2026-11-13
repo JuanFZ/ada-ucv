@@ -34,3 +34,4 @@ def export_multichoice_to_gift(questions: list[MultipleChoiceQuestion]) -> str:
         blocks.append("\n".join(lines))
 
     return "\n\n".join(blocks) + "\n"
+

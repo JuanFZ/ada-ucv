@@ -92,9 +92,10 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
                         ' (' + res.modelused + ') · Latencia: ' + res.latencyms + ' ms';
                     resultBox.classList.remove('d-none');
                 }).catch(function(err) {
-                    errorBox.textContent = err.message || 'Error al generar preguntas.';
+                    errorBox.textContent = (err && err.message)
+                        ? err.message
+                        : 'El asistente no pudo responder en este momento. Inténtalo nuevamente.';
                     errorBox.classList.remove('d-none');
-                    Notification.exception(err);
                 }).finally(function() {
                     btn.disabled = false;
                     status.classList.add('d-none');
