@@ -6,12 +6,22 @@
 <style>
 #ada-chat-toggle {
     position: fixed;
-    right: 18px;
+    right: 20px;
     bottom: 22px;
     z-index: 1040;
-    border-radius: 999px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
-    font-weight: 600;
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(15, 108, 191, 0.35);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+#ada-chat-toggle:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 8px 22px rgba(15, 108, 191, 0.45);
 }
 #ada-chat-drawer {
     position: fixed;
@@ -59,8 +69,26 @@
 }
 </style>
 
-<button id="ada-chat-toggle" type="button" class="btn btn-primary px-3 py-2" aria-label="Abrir chat ADA">
-    Asistente ADA
+<button id="ada-chat-toggle" type="button" class="btn btn-primary" aria-label="Abrir Asistente ADA" title="Asistente ADA">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="38" height="38" aria-hidden="true">
+        <!-- Orejas / Penachos -->
+        <path d="M16 12 L24 18 L18 24 Z" fill="#ffffff"/>
+        <path d="M48 12 L40 18 L46 24 Z" fill="#ffffff"/>
+        <!-- Cuerpo / Cabeza -->
+        <path d="M16 26 C16 17, 48 17, 48 26 L49 42 C49 51, 41 56, 32 56 C23 56, 15 51, 15 42 Z" fill="#ffffff"/>
+        <!-- Ojos grandes -->
+        <circle cx="25" cy="29" r="7.5" fill="#0f6cbf"/>
+        <circle cx="39" cy="29" r="7.5" fill="#0f6cbf"/>
+        <circle cx="25" cy="29" r="4.5" fill="#ffffff"/>
+        <circle cx="39" cy="29" r="4.5" fill="#ffffff"/>
+        <circle cx="25.8" cy="28.5" r="2.2" fill="#1b2a4a"/>
+        <circle cx="39.8" cy="28.5" r="2.2" fill="#1b2a4a"/>
+        <!-- Pico -->
+        <path d="M29 33 L35 33 L32 39 Z" fill="#f59e0b"/>
+        <!-- Pecho / Plumas -->
+        <path d="M24 44 Q32 50 40 44" fill="none" stroke="#0f6cbf" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M27 49 Q32 53 37 49" fill="none" stroke="#0f6cbf" stroke-width="2" stroke-linecap="round"/>
+    </svg>
 </button>
 
 <aside id="ada-chat-drawer" aria-hidden="true">
