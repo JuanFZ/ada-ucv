@@ -17,7 +17,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_ada';
-$plugin->version = 2026111200;
+$plugin->version = 2026111201;
 $plugin->requires = 2024100700; // Moodle 4.5.0+ (compatible con 4.5.8 y 5.0.12).
 $plugin->maturity = MATURITY_ALPHA;
 $plugin->release = '0.1.0';

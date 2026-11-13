@@ -1,0 +1,121 @@
+{{!
+    @template local_ada/chat_drawer
+
+    Panel lateral flotante de chat interactivo para ADA en cursos autorizados.
+}}
+<style>
+#ada-chat-toggle {
+    position: fixed;
+    right: 18px;
+    bottom: 22px;
+    z-index: 1040;
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+    font-weight: 600;
+}
+#ada-chat-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 390px;
+    max-width: 95vw;
+    height: 100vh;
+    z-index: 1050;
+    background: #ffffff;
+    border-left: 1px solid #dee2e6;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.22s ease-in-out;
+}
+#ada-chat-drawer.ada-open {
+    transform: translateX(0);
+}
+#ada-chat-messages {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 12px;
+    background: #f8f9fa;
+}
+.ada-msg {
+    margin-bottom: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.38;
+    max-width: 92%;
+}
+.ada-msg-user {
+    background: #0f6cbf;
+    color: #ffffff;
+    margin-left: auto;
+}
+.ada-msg-bot {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #212529;
+    margin-right: auto;
+}
+</style>
+
+<button id="ada-chat-toggle" type="button" class="btn btn-primary px-3 py-2" aria-label="Abrir chat ADA">
+    Asistente ADA
+</button>
+
+<aside id="ada-chat-drawer" aria-hidden="true">
+    <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-primary text-white">
+        <div>
+            <div class="fw-bold">ADA — Asistente Docente</div>
+            <small class="opacity-75">Generador de preguntas (XML / GIFT)</small>
+        </div>
+        <div>
+            <a href="{{fullworkspaceurl}}" class="btn btn-sm btn-outline-light me-1" title="Vista completa">↗</a>
+            <button id="ada-chat-close" type="button" class="btn btn-sm btn-outline-light" aria-label="Cerrar">×</button>
+        </div>
+    </div>
+
+    <div id="ada-chat-messages">
+        <div class="ada-msg ada-msg-bot">
+            Hola. Escríbeme el <strong>tema o contenido</strong> y te genero preguntas de opción múltiple listas para descargar e importar manualmente en tu Banco de preguntas.
+        </div>
+    </div>
+
+    <form id="ada-chat-form" class="p-2 border-top bg-white">
+        <div class="row g-1 mb-2">
+            <div class="col-3">
+                <select id="ada-chat-count" class="form-select form-select-sm" title="Cantidad">
+                    <option value="1">1 preg.</option>
+                    <option value="3" selected>3 preg.</option>
+                    <option value="5">5 preg.</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <select id="ada-chat-diff" class="form-select form-select-sm" title="Dificultad">
+                    <option value="basic">Básico</option>
+                    <option value="intermediate" selected>Medio</option>
+                    <option value="advanced">Avanz.</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <select id="ada-chat-format" class="form-select form-select-sm" title="Formato">
+                    <option value="moodle_xml" selected>XML</option>
+                    <option value="gift">GIFT</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <select id="ada-chat-provider" class="form-select form-select-sm" title="IA">
+                    <option value="auto" selected>Auto</option>
+                    <option value="gemini">Gemini</option>
+                    <option value="sambanova">Samba</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-group">
+            <textarea id="ada-chat-input" class="form-control form-control-sm" rows="2"
+                placeholder="Ej.: Árboles binarios de búsqueda (recorridos y complejidad)..."></textarea>
+            <button id="ada-chat-send" type="submit" class="btn btn-primary btn-sm">Enviar</button>
+        </div>
+    </form>
+</aside>
+
