@@ -71,7 +71,7 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
                 errorBox.classList.add('d-none');
                 resultBox.classList.add('d-none');
 
-                Ajax.call([{
+                Promise.resolve(Ajax.call([{
                     methodname: 'local_ada_generate_questions',
                     args: {
                         courseid: courseid,
@@ -81,7 +81,7 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
                         provider: document.getElementById('ada-provider').value,
                         exportformat: exportFormat
                     }
-                }])[0].then(function(res) {
+                }])[0]).then(function(res) {
                     lastContent = res.exportedcontent || '';
                     lastFilename = res.filename || 'ada_preguntas.xml';
                     lastMime = exportFormat === 'gift' ? 'text/plain;charset=utf-8' : 'application/xml;charset=utf-8';

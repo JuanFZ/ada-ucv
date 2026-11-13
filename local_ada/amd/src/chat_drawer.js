@@ -92,7 +92,7 @@ define(['core/ajax'], function(Ajax) {
 
                 var loadingBubble = appendBubble('<em>Generando y validando preguntas...</em>', false);
 
-                Ajax.call([{
+                Promise.resolve(Ajax.call([{
                     methodname: 'local_ada_generate_questions',
                     args: {
                         courseid: courseid,
@@ -102,7 +102,7 @@ define(['core/ajax'], function(Ajax) {
                         provider: provider,
                         exportformat: exportFormat
                     }
-                }])[0].then(function(res) {
+                }])[0]).then(function(res) {
                     var questions = JSON.parse(res.questionsjson || '[]');
                     var listHtml = questions.map(function(q, idx) {
                         return '<div class="mb-1"><strong>' + (idx + 1) + '.</strong> ' + escapeHtml(q.name) + '</div>';
