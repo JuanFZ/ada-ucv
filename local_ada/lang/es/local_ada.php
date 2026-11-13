@@ -32,6 +32,7 @@ $string['difficulty_basic'] = 'Básico';
 $string['difficulty_intermediate'] = 'Intermedio';
 $string['difficulty_advanced'] = 'Avanzado';
 $string['field_provider'] = 'Proveedor de IA';
+$string['field_format'] = 'Formato de exportación';
 $string['provider_auto'] = 'Automático (Primario + Fallback)';
 $string['btn_generate'] = 'Generar preguntas';
 $string['btn_download_xml'] = 'Descargar Moodle XML';

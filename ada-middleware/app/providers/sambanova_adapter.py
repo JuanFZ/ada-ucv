@@ -6,3 +6,4 @@ class SambaNovaAdapter(OpenAICompatibleAdapter):
 
     name = "sambanova"
     ENDPOINT = "https://api.sambanova.ai/v1/chat/completions"
+

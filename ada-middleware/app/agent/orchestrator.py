@@ -3,6 +3,7 @@ import json
 from pydantic import ValidationError
 
 from app.config import settings
+from app.exporters.gift import export_multichoice_to_gift
 from app.exporters.moodle_xml import export_multichoice_to_moodle_xml
 from app.providers.router import ProviderRouter
 from app.schemas.questions import (
@@ -60,16 +61,21 @@ class QuestionOrchestrator:
                 raw_obj = json.loads(result.raw_json)
                 batch = GeneratedQuestionBatch.model_validate(raw_obj)
                 validate_question_batch(batch, expected_count=req.count)
-                xml_output = export_multichoice_to_moodle_xml(batch.questions)
                 stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+                if req.export_format == "gift":
+                    exported_output = export_multichoice_to_gift(batch.questions)
+                    filename = f"ada_preguntas_{stamp}.gift.txt"
+                else:
+                    exported_output = export_multichoice_to_moodle_xml(batch.questions)
+                    filename = f"ada_preguntas_{stamp}.xml"
                 return QuestionGenerationResponse(
                     provider_used=result.provider,
                     model_used=result.model,
                     latency_ms=total_latency,
                     retries=retries,
                     questions=batch.questions,
-                    exported_content=xml_output,
-                    filename=f"ada_preguntas_{stamp}.xml",
+                    exported_content=exported_output,
+                    filename=filename,
                 )
             except (json.JSONDecodeError, ValidationError, QuestionValidationError) as exc:
                 last_error = str(exc)

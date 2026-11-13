@@ -33,6 +33,7 @@ class QuestionGenerationRequest(BaseModel):
     course_shortname: str = Field(default="", max_length=100)
     topic: str = Field(..., min_length=3, max_length=500)
     question_type: Literal["multichoice"] = "multichoice"
+    export_format: Literal["moodle_xml", "gift"] = "moodle_xml"
     count: int = Field(default=3, ge=1, le=10)
     difficulty: Literal["basic", "intermediate", "advanced"] = "intermediate"
     language: str = Field(default="es", max_length=10)

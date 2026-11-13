@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import pytest
 
+from app.exporters.gift import export_multichoice_to_gift
 from app.exporters.moodle_xml import export_multichoice_to_moodle_xml
 from app.schemas.questions import GeneratedQuestionBatch, MultipleChoiceQuestion, QuestionOption
 from app.validators.question_validator import QuestionValidationError, validate_question_batch
@@ -54,4 +55,16 @@ def test_moodle_xml_export_is_valid_xml_with_special_chars() -> None:
     assert len(questions) == 1
     assert questions[0].attrib["type"] == "multichoice"
     assert "áéíóúñ" in xml_str
+
+
+def test_gift_export_escapes_reserved_chars_and_includes_feedback() -> None:
+    batch = _sample_batch()
+    batch.questions[0].question_text = "¿Qué significa f(x) = {a: b} ~ #1?"
+    gift_str = export_multichoice_to_gift(batch.questions)
+
+    assert "::Complejidad búsqueda binaria::" in gift_str
+    assert r"\= \{a\: b\} \~ \#1?" in gift_str
+    assert "=O(log n) #Correcto." in gift_str
+    assert "~O(n^2) #Incorrecto." in gift_str
+    assert "####En árboles balanceados" in gift_str
 

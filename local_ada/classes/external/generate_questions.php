@@ -36,6 +36,7 @@ class generate_questions extends external_api {
             'count' => new external_value(PARAM_INT, 'Number of questions (1-10)', VALUE_DEFAULT, 3),
             'difficulty' => new external_value(PARAM_ALPHA, 'Difficulty level', VALUE_DEFAULT, 'intermediate'),
             'provider' => new external_value(PARAM_ALPHA, 'Provider override (auto, groq, gemini)', VALUE_DEFAULT, 'auto'),
+            'exportformat' => new external_value(PARAM_ALPHANUMEXT, 'Export format (moodle_xml, gift)', VALUE_DEFAULT, 'moodle_xml'),
         ]);
     }
 
@@ -47,6 +48,7 @@ class generate_questions extends external_api {
      * @param int $count
      * @param string $difficulty
      * @param string $provider
+     * @param string $exportformat
      * @return array
      */
     public static function execute(
@@ -54,7 +56,8 @@ class generate_questions extends external_api {
         string $topic,
         int $count = 3,
         string $difficulty = 'intermediate',
-        string $provider = 'auto'
+        string $provider = 'auto',
+        string $exportformat = 'moodle_xml'
     ): array {
         global $CFG, $DB;
 
@@ -64,6 +67,7 @@ class generate_questions extends external_api {
             'count' => $count,
             'difficulty' => $difficulty,
             'provider' => $provider,
+            'exportformat' => $exportformat,
         ]);
 
         $context = \context_course::instance($params['courseid']);
@@ -79,6 +83,7 @@ class generate_questions extends external_api {
             'course_shortname' => $course->shortname,
             'topic' => trim($params['topic']),
             'question_type' => 'multichoice',
+            'export_format' => $params['exportformat'] === 'gift' ? 'gift' : 'moodle_xml',
             'count' => max(1, min(10, (int)$params['count'])),
             'difficulty' => $params['difficulty'],
             'language' => current_language(),

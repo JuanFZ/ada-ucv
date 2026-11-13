@@ -16,7 +16,7 @@
             </div>
 
             <div class="row g-3 mb-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="ada-count" class="form-label fw-bold">{{#str}} field_count, local_ada {{/str}}</label>
                     <select id="ada-count" class="form-select">
                         <option value="1">1</option>
@@ -25,7 +25,7 @@
                         <option value="10">10</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="ada-difficulty" class="form-label fw-bold">{{#str}} field_difficulty, local_ada {{/str}}</label>
                     <select id="ada-difficulty" class="form-select">
                         <option value="basic">{{#str}} difficulty_basic, local_ada {{/str}}</option>
@@ -33,7 +33,14 @@
                         <option value="advanced">{{#str}} difficulty_advanced, local_ada {{/str}}</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label for="ada-format" class="form-label fw-bold">{{#str}} field_format, local_ada {{/str}}</label>
+                    <select id="ada-format" class="form-select">
+                        <option value="moodle_xml" selected>Moodle XML (.xml)</option>
+                        <option value="gift">GIFT (.txt)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label for="ada-provider" class="form-label fw-bold">{{#str}} field_provider, local_ada {{/str}}</label>
                     <select id="ada-provider" class="form-select">
                         <option value="auto" selected>{{#str}} provider_auto, local_ada {{/str}}</option>
