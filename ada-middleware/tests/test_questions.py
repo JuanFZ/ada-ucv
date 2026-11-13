@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import pytest
 
+from app.agent.orchestrator import _extract_json_text
 from app.exporters.gift import export_multichoice_to_gift
 from app.exporters.moodle_xml import export_multichoice_to_moodle_xml
 from app.schemas.questions import GeneratedQuestionBatch, MultipleChoiceQuestion, QuestionOption
@@ -67,4 +68,9 @@ def test_gift_export_escapes_reserved_chars_and_includes_feedback() -> None:
     assert "=O(log n) #Correcto." in gift_str
     assert "~O(n^2) #Incorrecto." in gift_str
     assert "####En árboles balanceados" in gift_str
+
+
+def test_extract_json_text_strips_markdown_fences() -> None:
+    raw = 'Aquí tienes:\n```json\n{"questions": []}\n```\n'
+    assert _extract_json_text(raw) == '{"questions": []}'
 

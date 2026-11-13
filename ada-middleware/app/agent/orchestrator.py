@@ -25,6 +25,23 @@ Reglas obligatorias:
 """
 
 
+def _extract_json_text(raw: str) -> str:
+    """Limpia bloques markdown ```json ... ``` si un modelo los incluye alrededor del JSON."""
+    text = raw.strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        if lines and lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\n".join(lines).strip()
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        return text[start : end + 1]
+    return text
+
+
 class QuestionOrchestrator:
     """Orquesta generación -> validación -> reparación acotada -> exportación determinista."""
 
@@ -58,7 +75,7 @@ class QuestionOrchestrator:
             total_latency += result.latency_ms
 
             try:
-                raw_obj = json.loads(result.raw_json)
+                raw_obj = json.loads(_extract_json_text(result.raw_json))
                 batch = GeneratedQuestionBatch.model_validate(raw_obj)
                 validate_question_batch(batch, expected_count=req.count)
                 stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")

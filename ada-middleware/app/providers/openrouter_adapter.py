@@ -6,3 +6,4 @@ class OpenRouterAdapter(OpenAICompatibleAdapter):
 
     name = "openrouter"
     ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
+
