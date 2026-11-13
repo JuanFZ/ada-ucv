@@ -14,7 +14,10 @@ class Settings(BaseSettings):
     mistral_model: str = "mistral-small-latest"
 
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.5-flash-lite"
+
+    sambanova_api_key: str = ""
+    sambanova_model: str = "Meta-Llama-3.3-70B-Instruct"
 
     groq_api_key: str = ""
     groq_model: str = "llama-3.3-70b-versatile"

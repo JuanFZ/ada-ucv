@@ -6,3 +6,4 @@ class MistralAdapter(OpenAICompatibleAdapter):
 
     name = "mistral"
     ENDPOINT = "https://api.mistral.ai/v1/chat/completions"
+

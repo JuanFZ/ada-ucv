@@ -86,3 +86,4 @@ class OpenAICompatibleAdapter(LLMProvider):
             raw_json=content,
             latency_ms=latency_ms,
         )
+
